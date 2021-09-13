@@ -7,6 +7,10 @@ import Card from "react-bootstrap/Card";
 class BookInfo extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      anything:"",
+     
+    };
   }
 
 
