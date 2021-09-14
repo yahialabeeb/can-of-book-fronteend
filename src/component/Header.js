@@ -21,6 +21,7 @@ class Header extends React.Component {
         </NavItem>
         <Login 
         componentDidMount={this.props.componentDidMount}
+        handelLogout={this.props.handelLogout}
         />
       </Navbar>
     );
