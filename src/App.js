@@ -12,7 +12,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       BooksData: [],
-     
     };
   }
 
@@ -27,25 +26,28 @@ class App extends React.Component {
   //     user: null,
   //   });
   // };
-  // 
-  componentDidMount = (userEmail) => {
-    
-    if (userEmail){    console.log(userEmail)
-    }else{
-    axios.get(`${process.env.REACT_APP_API_URL}/books?email=${userEmail}`)
-      .then((book) => {
-        console.log(book);
-        this.setState({ BooksData: book.data });
-      })
-      .catch((error) => alert(error.message));
-    }
+  //
 
+  componentDidMount = (userEmail) => {
+    if (userEmail) {
+      console.log(userEmail);
+    } else {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/books?email=${userEmail}`)
+        .then((book) => {
+          console.log(book);
+          this.setState({ BooksData: book.data });
+        })
+        .catch((error) => alert(error.message));
+    }
   };
   render() {
     return (
       <>
         <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler}
+          <Header
+            user={this.state.user}
+            onLogout={this.logoutHandler}
             componentDidMount={this.componentDidMount}
           />
 
@@ -55,8 +57,7 @@ class App extends React.Component {
               <Profile />
             </Route>
           </Switch>
-          <BookInfo
-          BooksData={this.state.BooksData} />
+          <BookInfo BooksData={this.state.BooksData} />
           <Footer />
         </Router>
       </>
