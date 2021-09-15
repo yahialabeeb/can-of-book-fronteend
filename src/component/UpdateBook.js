@@ -4,42 +4,51 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 export class UpdateBook extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    };
+  }
+  
+  
   render() {
     return (
       <Modal
         show={this.props.show}
-        onHide={this.props.handelDisplayUpdateModal}
+        // onHide={this.props.showUpdateModal}
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButtoun>
           <Modal.Title>Update Book</Modal.Title>
+          <Button variant="primary" onClick={this.props.closeupdatemodal}>
+              close
+            </Button>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={this.props.handelUpdateModal}>
+          <Form onSubmit={this.props.updateBookModal}>
             <Form.Group className="mb-3">
               <Form.Label>Book Title</Form.Label>
               <Form.Control
                 type="text"
                 name="bookTitle"
-                placeholder="Enter Book Title"
                 defaultValue={this.props.selectedBookDataObj.title}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Cat Breed</Form.Label>
+              <Form.Label>Description</Form.Label>
               <Form.Control
                 type="text"
                 name="bookDescription"
-                placeholder="Enter Book Description"
-                defaultValue={this.props.selectedCatDataObj.description}
+                defaultValue={this.props.selectedBookDataObj.description}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>E-mail</Form.Label>
+              <Form.Label>Status</Form.Label>
               <Form.Control
                 type="text"
-                name="email"
-                placeholder="Enter email"
-                defaultValue={this.props.selectedCatDataObj.email}
+                name="status"
+                defaultValue={this.props.selectedBookDataObj.status}
               />
             </Form.Group>
 
