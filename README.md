@@ -39,3 +39,13 @@ In this project react, axios, bootstrap,mongo and node js are used.
 ## Finish time: 7:30pm
 
 ## Actual time needed to complete: 2 hours
+
+## Name of feature add Update
+
+## Estimate of time needed to complete: 2 hours
+
+## Start time: 1:30pm
+
+## Finish time: 3:30pm
+
+## Actual time needed to complete: 2 hours
