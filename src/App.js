@@ -1,3 +1,4 @@
+ 
 import React from "react";
 import Header from "./component/Header";
 import Footer from "./component/Footer";
@@ -15,36 +16,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       BooksData: [],
-    };
-  }
-
-  // loginHandler = (user) => {
-  //   this.setState({
-  //     user,
-  //   });
-  // };
-
-  // logoutHandler = () => {
-  //   this.setState({
-  //     user: null,
-  //   });
-  // };
-  //
-
-  componentDidMount = (userEmail) => {
-    if (userEmail) {
-      console.log(userEmail);
-    } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/books?email=${userEmail}`)
-        .then((book) => {
-          console.log(book);
-          this.setState({ BooksData: book.data });
-        })
-        .catch((error) => alert(error.message));
-    }
-  };
-
       userEmail: "",
       showAddBookForm: false,
       login:false
@@ -130,9 +101,7 @@ alert(`${bookInfo.title} successfully added`)
     return (
       <>
         <Router>
-          <Header
-            user={this.state.user}
-            onLogout={this.logoutHandler}
+          <Header user={this.state.user} onLogout={this.logoutHandler}
             componentDidMount={this.componentDidMount}
             handelLogout={this.handelLogout}
           />
@@ -143,9 +112,6 @@ alert(`${bookInfo.title} successfully added`)
               <Profile />
             </Route>
           </Switch>
-
-          <BookInfo BooksData={this.state.BooksData} />
-
 
           <BookInfo
             BooksData={this.state.BooksData} 
@@ -161,7 +127,6 @@ alert(`${bookInfo.title} successfully added`)
             addBook={this.addBook}
             
           />
-
           <Footer />
         </Router>
       </>
