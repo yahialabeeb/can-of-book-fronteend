@@ -1,8 +1,6 @@
 import React from "react";
 
 
-
-
 class BookFormModal extends React.Component {
 
     constructor(props) {
