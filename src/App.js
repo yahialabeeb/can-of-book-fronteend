@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import Header from "./component/Header";
 import Footer from "./component/Footer";
@@ -7,6 +7,7 @@ import Profile from "./Profile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import BookInfo from "./component/BookInfo";
+import UpdateBook from "./component/UpdateBook";
 import axios from "axios";
 
 
@@ -18,36 +19,39 @@ class App extends React.Component {
       BooksData: [],
       userEmail: "",
       showAddBookForm: false,
-      login:false
+      login: false,
+      selectedBookDataObj: {},
+      showUpdateModal: false
 
     };
   }
 
   // login
-  componentDidMount = (email,loginstate) => {
+  componentDidMount = (email, loginstate) => {
 
     if (email) {
       axios.get(`${process.env.REACT_APP_API_URL}/books?email=${email}`)
         .then((book) => {
           console.log(book);
-          this.setState({ 
+          this.setState({
             BooksData: book.data,
-            userEmail:email,
-            login:loginstate
+            userEmail: email,
+            login: loginstate
           });
         })
         .catch((error) => alert(error.message));
-     
+
     } else {
       console.log(email)
     }
   }
 
-  handelLogout = ()=>{
-    this.setState({ 
+  handelLogout = () => {
+    this.setState({
       BooksData: [],
-      userEmail:'',
-      login:false
+      userEmail: '',
+      login: false,
+      showUpdateModal: false
     });
   }
 
@@ -72,7 +76,7 @@ class App extends React.Component {
       showAddBookForm: false // hide form and show button
     })
 
-alert(`${bookInfo.title} successfully added`)
+    alert(`${bookInfo.title} successfully added`)
 
 
   }
@@ -86,8 +90,8 @@ alert(`${bookInfo.title} successfully added`)
 
   // delete----------------------------------------------
   deleteBook = async (bookID) => {
-   
-    // let catsInfo = await axios.delete(`${process.env.REACT_APP_SERVER}/deleteCat?catID=${catID}`)
+
+
     let booksInfo = await axios.delete(`${process.env.REACT_APP_API_URL}/deletebook/${bookID}?email=${this.state.userEmail}`)
 
     this.setState({
@@ -95,13 +99,55 @@ alert(`${bookInfo.title} successfully added`)
     })
     alert('successfully deleted')
   }
+  // update data code -----------------------------
+  updateBook = async (bookID) => {
+    let chosenBook = this.state.BooksData.find(book => {
 
+      return book._id === bookID
+    })
+    console.log({ chosenBook });
+    await this.setState({
+      showUpdateModal: true,
+      selectedBookDataObj: chosenBook
+    })
+  }
+
+  updateBookModal = (e) => {
+    e.preventDefault();
+
+    const reqBody = {
+      email: this.state.userEmail,
+      title: e.target.bookTitle.value,
+      description: e.target.bookDescription.value,
+      status: e.target.status.value,
+    };
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/updatebook/${this.state.selectedBookDataObj._id}`,
+        reqBody
+      )
+      .then((userbooks) => {
+        this.setState({
+          BooksData: userbooks.data,
+          selectedBookDataObj: {},
+          showUpdateModal: false,
+        });
+
+      })
+      .catch(() => alert("Something went wrong!"));
+  };
+  closeupdatemodal = () => {
+    console.log("hi")
+    this.setState({
+      showUpdateModal: false,
+    });
+  }
 
   render() {
     return (
       <>
         <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler}
+          <Header
             componentDidMount={this.componentDidMount}
             handelLogout={this.handelLogout}
           />
@@ -114,9 +160,10 @@ alert(`${bookInfo.title} successfully added`)
           </Switch>
 
           <BookInfo
-            BooksData={this.state.BooksData} 
+            BooksData={this.state.BooksData}
             deleteBook={this.deleteBook}
-            />
+            updateBook={this.updateBook}
+          />
           {!this.state.showAddBookForm && this.state.login &&
             <button onClick={this.getAddBookForm}>
               Add book
@@ -125,8 +172,18 @@ alert(`${bookInfo.title} successfully added`)
           <BookFormModal
             showAddBookForm={this.state.showAddBookForm}
             addBook={this.addBook}
-            
           />
+          {this.state.showUpdateModal && (
+            <>
+              <UpdateBook
+                show={this.state.showUpdateModal}
+                updateBook={this.updateBook}
+                updateBookModal={this.updateBookModal}
+                selectedBookDataObj={this.state.selectedBookDataObj}
+                closeupdatemodal={this.closeupdatemodal}
+              />
+            </>
+          )}
           <Footer />
         </Router>
       </>
