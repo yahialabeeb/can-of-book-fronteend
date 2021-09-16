@@ -2,7 +2,7 @@ import React from "react";
 import LoginButton from "./LoginButton";
 import { Navbar, NavItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Login from "./Login";
+
 import LogoutButton from "./LogoutButton";
 // import './header.css';
 
@@ -24,10 +24,10 @@ class Header extends React.Component {
         <LoginButton
         componentDidMount={this.props.componentDidMount}/>
         <LogoutButton/>
-        <Login 
+        {/* <Login 
         componentDidMount={this.props.componentDidMount}
         handelLogout={this.props.handelLogout}
-        />
+        /> */}
       </Navbar>
     );
   }
