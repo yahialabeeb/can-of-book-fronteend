@@ -31,7 +31,7 @@ class App extends React.Component {
   // login
   getData = () => {
 
-    
+    if (this.props.auth0.user){
       axios.get(`${process.env.REACT_APP_API_URL}/books?email=${this.props.auth0.user.email}`)
         .then((book) => {
           console.log(book);
@@ -43,7 +43,8 @@ class App extends React.Component {
 
         })
         .catch((error) => alert(error.message));
-
+      }
+      
   }
 
   // handelLogout = () => {
