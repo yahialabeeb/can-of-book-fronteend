@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import BookInfo from "./component/BookInfo";
 import UpdateBook from "./component/UpdateBook";
 import axios from "axios";
-
+import { withAuth0 } from '@auth0/auth0-react';
 
 
 class App extends React.Component {
@@ -23,37 +23,37 @@ class App extends React.Component {
       selectedBookDataObj: {},
       showUpdateModal: false
 
+
     };
   }
 
-  // login
-  componentDidMount = (email, loginstate) => {
 
-    if (email) {
-      axios.get(`${process.env.REACT_APP_API_URL}/books?email=${email}`)
+  // login
+  getData = () => {
+
+    
+      axios.get(`${process.env.REACT_APP_API_URL}/books?email=${this.props.auth0.user.email}`)
         .then((book) => {
           console.log(book);
           this.setState({
             BooksData: book.data,
-            userEmail: email,
-            login: loginstate
+            userEmail: this.props.auth0.user.email,
+
           });
+
         })
         .catch((error) => alert(error.message));
 
-    } else {
-      console.log(email)
-    }
   }
 
-  handelLogout = () => {
-    this.setState({
-      BooksData: [],
-      userEmail: '',
-      login: false,
-      showUpdateModal: false
-    });
-  }
+  // handelLogout = () => {
+  //   this.setState({
+  //     BooksData: [],
+  //     userEmail: '',
+  //     login: false,
+  //     showUpdateModal: false
+  //   });
+  // }
 
 
   //------------------------------------------------------
@@ -65,7 +65,7 @@ class App extends React.Component {
     let bookInfo = {
       title: e.target.bookName.value,
       description: e.target.description.value,
-      email: this.state.userEmail,
+      email: this.props.auth0.user.email,
       status: e.target.status.value,
     }
     console.log(bookInfo)
@@ -92,7 +92,7 @@ class App extends React.Component {
   deleteBook = async (bookID) => {
 
 
-    let booksInfo = await axios.delete(`${process.env.REACT_APP_API_URL}/deletebook/${bookID}?email=${this.state.userEmail}`)
+    let booksInfo = await axios.delete(`${process.env.REACT_APP_API_URL}/deletebook/${bookID}?email=${this.props.auth0.user.email}`)
 
     this.setState({
       BooksData: booksInfo.data
@@ -142,33 +142,44 @@ class App extends React.Component {
       showUpdateModal: false,
     });
   }
-
+  componentDidUpdate(){
+    this.getData();
+  }
   render() {
+    
+    const { isAuthenticated } = this.props.auth0;
     return (
       <>
         <Router>
           <Header
             componentDidMount={this.componentDidMount}
             handelLogout={this.handelLogout}
+            key={this.state.userEmail}
           />
 
           <Switch>
-            <Route exact path="/"></Route>
+            <Route exact path="/">
+              {isAuthenticated &&
+                <BookInfo
+                  BooksData={this.state.BooksData}
+                  deleteBook={this.deleteBook}
+                  updateBook={this.updateBook}
+                  
+                />
+              }
+              {!this.state.showAddBookForm && isAuthenticated &&
+                <button onClick={this.getAddBookForm}>
+                  Add book
+                </button>
+              }
+            </Route>
             <Route exact path="/profile">
               <Profile />
             </Route>
           </Switch>
 
-          <BookInfo
-            BooksData={this.state.BooksData}
-            deleteBook={this.deleteBook}
-            updateBook={this.updateBook}
-          />
-          {!this.state.showAddBookForm && this.state.login &&
-            <button onClick={this.getAddBookForm}>
-              Add book
-            </button>
-          }
+
+
           <BookFormModal
             showAddBookForm={this.state.showAddBookForm}
             addBook={this.addBook}
@@ -192,4 +203,4 @@ class App extends React.Component {
 }
 
 
-export default App;
+export default withAuth0(App);

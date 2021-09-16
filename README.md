@@ -49,3 +49,13 @@ In this project react, axios, bootstrap,mongo and node js are used.
 ## Finish time: 3:30pm
 
 ## Actual time needed to complete: 2 hours
+
+## Name of feature: add auth0
+
+## Estimate of time needed to complete: 2 hours
+
+## Start time: 2:30am
+
+## Finish time: 4:00am
+
+## Actual time needed to complete: one and half hour
